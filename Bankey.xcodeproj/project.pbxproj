@@ -180,8 +180,11 @@
 			isa = PBXGroup;
 			children = (
 				33DA62152B0781210052CAF9 /* AccountSummaryViewController.swift */,
+<<<<<<< HEAD
 				337E760E2B07E4D8003E3A7A /* Header */,
 				337E760F2B07E508003E3A7A /* Cells */,
+=======
+>>>>>>> 8e19e2ec39235cad5724daba43a91fbd32c757b2
 			);
 			name = AccountSummary;
 			sourceTree = "<group>";

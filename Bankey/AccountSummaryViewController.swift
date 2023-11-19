@@ -9,7 +9,6 @@ import UIKit
 
 class AccountSummaryViewController: UIViewController {
     
-    
     var accounts : [AccountSummaryCell.ViewModel] = []
     
     var tableView = UITableView()
@@ -67,12 +66,12 @@ extension AccountSummaryViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: AccountSummaryCell.reuseID, for: indexPath) as! AccountSummaryCell
         let account = accounts[indexPath.row]
         cell.configure(with: account)
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accounts.count
+
     }
 }
 
@@ -81,7 +80,6 @@ extension AccountSummaryViewController: UITableViewDelegate {
         
     }
 }
-
 
 extension AccountSummaryViewController {
     private func fetchData() {

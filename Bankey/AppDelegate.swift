@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         loginViewController.delegate = self
         onboardingViewController.delegate = self
+
         
         mainViewController.setStatusBar()
         
@@ -31,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().backgroundColor = appColor
         
         window?.rootViewController = mainViewController
-        
+
         return true
     }
     
