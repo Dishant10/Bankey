@@ -35,27 +35,27 @@ extension AccountSummaryViewController {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-            DispatchQueue.main.async{
-                guard error == nil else {
-                    completion(.failure(.serverError))
-                    return
-                }
-                guard let data = data else {
-                    completion(.failure(.serverError))
-                    return
-                }
-                
-                do {
-                    let decoder = JSONDecoder()
-                    let profile = try decoder.decode(Profile.self, from: data)
-                    completion(.success(profile))
-                }
-                catch{
+//        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+//            DispatchQueue.main.async{
+//                guard error == nil else {
+//                    completion(.failure(.serverError))
+//                    return
+//                }
+//                guard let data = data else {
+//                    completion(.failure(.serverError))
+//                    return
+//                }
+//                
+//                do {
+//                    let decoder = JSONDecoder()
+//                    let profile = try decoder.decode(Profile.self, from: data)
+//                    completion(.success(profile))
+//                }
+//                catch{
                     completion(.failure(.decodingError))
-                }
-            }
-        }
-        task.resume()
+//                }
+//            }
+//        }
+//        task.resume()
     }
 }

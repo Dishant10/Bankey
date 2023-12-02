@@ -6,7 +6,7 @@
 //
 
 import UIKit
-    
+
 class AccountSummaryViewController: UIViewController {
     
     //request models
@@ -87,7 +87,7 @@ extension AccountSummaryViewController {
         refreshControl.addTarget(self, action: #selector(refreshContent), for: .valueChanged)
         tableView.refreshControl = refreshControl
     }
-
+    
 }
 
 extension AccountSummaryViewController: UITableViewDataSource {
@@ -125,7 +125,7 @@ extension AccountSummaryViewController {
                 self.profile = profile
                 
             case .failure(let error):
-                print(error.localizedDescription)
+                self.displayError(error: error)
             }
             group.leave()
         }
@@ -133,11 +133,17 @@ extension AccountSummaryViewController {
         group.enter()
         fetchAccounts(forUserId: "1") { result in
             switch result {
-             case .success(let accounts):
+            case .success(let accounts):
                 self.accounts = accounts
                 
             case .failure(let error):
-                print(error)
+                switch error {
+                case .decodingError:
+                    self.showErrorAlert(title: "Decoding Error", message: "We could not process your request. Please try again.")
+                    
+                case.serverError:
+                    self.showErrorAlert(title: "Server Error", message: "Ensure you are connected to the internet. Please try again.")
+                }
             }
             group.leave()
         }
@@ -168,8 +174,28 @@ extension AccountSummaryViewController {
                                                     date: Date())
         headerView.configure(viewModel: vm)
     }
+    
+    private func showErrorAlert(title: String, message : String) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func displayError(error : NetwokingError){
+        switch error {
+        case .decodingError:
+            self.showErrorAlert(title: "Decoding Error", message: "We could not process your request. Please try again.")
+            
+        case.serverError:
+            self.showErrorAlert(title: "Server Error", message: "Ensure you are connected to the internet. Please try again.")
+        }
+    }
 }
- 
+
 //MARK:- Actions
 
 extension AccountSummaryViewController{
