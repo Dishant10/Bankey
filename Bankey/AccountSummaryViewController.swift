@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+    
 class AccountSummaryViewController: UIViewController {
     
     //request models
@@ -21,6 +21,7 @@ class AccountSummaryViewController: UIViewController {
     var tableView = UITableView()
     var headerView = AccountSummaryHeaderView(frame: .zero)
     let refreshControl = UIRefreshControl()
+    var isLoaded = false
     
     lazy var logoutBarButtonItem : UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutTapped))
@@ -122,7 +123,7 @@ extension AccountSummaryViewController {
             switch result {
             case .success(let profile):
                 self.profile = profile
-                self.configureTableHeaderView(with: profile)
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -134,7 +135,7 @@ extension AccountSummaryViewController {
             switch result {
              case .success(let accounts):
                 self.accounts = accounts
-                self.configureTableCells(with: accounts)
+                
             case .failure(let error):
                 print(error)
             }
@@ -142,8 +143,15 @@ extension AccountSummaryViewController {
         }
         
         group.notify(queue: .main) {
-            self.tableView.reloadData()
             self.tableView.refreshControl?.endRefreshing()
+            
+            guard let profile = self.profile else { return }
+            
+            self.isLoaded = true
+            self.configureTableHeaderView(with: profile)
+            self.configureTableCells(with: self.accounts)
+            self.tableView.reloadData()
+            
         }
     }
     
@@ -161,7 +169,7 @@ extension AccountSummaryViewController {
         headerView.configure(viewModel: vm)
     }
 }
-
+ 
 //MARK:- Actions
 
 extension AccountSummaryViewController{
