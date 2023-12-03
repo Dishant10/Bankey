@@ -22,6 +22,7 @@ class AccountSummaryViewController: UIViewController {
     var headerView = AccountSummaryHeaderView(frame: .zero)
     let refreshControl = UIRefreshControl()
     var isLoaded = false
+    var profileManager : ProfileManageable = ProfileManager()
     
     lazy var logoutBarButtonItem : UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logoutTapped))
@@ -119,7 +120,7 @@ extension AccountSummaryViewController {
         let group = DispatchGroup()
         
         group.enter()
-        fetchProfile(forUserId: "1") { result in
+        profileManager.fetchProfile(forUserId: "1") { result in
             switch result {
             case .success(let profile):
                 self.profile = profile
@@ -186,13 +187,23 @@ extension AccountSummaryViewController {
     }
     
     private func displayError(error : NetwokingError){
+        let titleAndMessageString = titleAndMessage(error: error)
+        self.showErrorAlert(title: "Decoding Error", message: "We could not process your request. Please try again.")
+    }
+    
+    private func titleAndMessage(error:NetwokingError)->(String,String){
+        var title : String
+        var message : String
+        
         switch error {
         case .decodingError:
-            self.showErrorAlert(title: "Decoding Error", message: "We could not process your request. Please try again.")
-            
+            title = "Decoding Error"
+            message = "We could not process your request. Please try again."
         case.serverError:
-            self.showErrorAlert(title: "Server Error", message: "Ensure you are connected to the internet. Please try again.")
+            title = "Server Error"
+            message = "Ensure you are connected to the internet. Please try again."
         }
+        return (title,message)
     }
 }
 
@@ -205,5 +216,13 @@ extension AccountSummaryViewController{
     
     @objc func refreshContent(){
         fetchData()
+    }
+}
+
+//MARK:- Unit testing
+
+extension AccountSummaryViewController{
+    func titleAndMessageForTesting(error:NetwokingError)->(String,String){
+        return titleAndMessage(error: error)
     }
 }
